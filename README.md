@@ -54,19 +54,38 @@ authenticates the agent, and returns its resolved DID:
 Every fund movement / PII resolution routes through `@terminal3/t3n-sdk`. Remove
 the SDK and the app breaks by design.
 
+**Identity / session** (`lib/t3/client.ts`):
+
 | SDK call | Purpose | File:line |
 | --- | --- | --- |
-| `setEnvironment("testnet")` | Pin SDK to the T3 test network | `lib/t3/client.ts:51`, `lib/t3/client.ts:72` |
-| `loadWasmComponent()` | Load the WASM crypto/state-machine component | `lib/t3/client.ts:52` |
-| `eth_get_address(privateKey)` | Derive the agent's ETH address from its secret | `lib/t3/client.ts:75` |
-| `metamask_sign(address, _, privateKey)` | EthSign handler for the SDK handshake/auth | `lib/t3/client.ts:81` |
-| `new T3nClient({ wasmComponent, handlers })` | Construct the authenticated agent client | `lib/t3/client.ts:78` |
-| `client.handshake()` | Establish the encrypted session | `lib/t3/client.ts:85` |
-| `client.authenticate(createEthAuthInput(address))` | Authenticate + resolve the agent DID | `lib/t3/client.ts:86` |
+| `setEnvironment("testnet")` | Pin SDK to the T3 test network | `lib/t3/client.ts:49`, `:95` |
+| `loadWasmComponent()` | Load the WASM crypto/state-machine component | `lib/t3/client.ts:50` |
+| `eth_get_address(privateKey)` | Derive the agent's ETH address from its secret | `lib/t3/client.ts:74`, `:97` |
+| `metamask_sign(address, _, privateKey)` | EthSign handler for the SDK handshake/auth | `lib/t3/client.ts:102` |
+| `new T3nClient({ wasmComponent, handlers })` | Construct the authenticated agent client | `lib/t3/client.ts:100` |
+| `client.handshake()` | Establish the encrypted session | `lib/t3/client.ts:105` |
+| `client.authenticate(createEthAuthInput(address))` | Authenticate + resolve the agent DID | `lib/t3/client.ts:106` |
 
-_(Line numbers are refreshed as the code evolves. The four-function core adapter —
-mint authorization, verify identity, resolve+payout in TEE, write audit row —
-lands in `lib/t3/adk.ts` at Step 3.)_
+**Agent-Auth core — the four-function adapter** (`lib/t3/adk.ts`):
+
+| Adapter fn | Real SDK calls | Purpose | File:line |
+| --- | --- | --- | --- |
+| `mintBuyerAuthorization` | `buildDelegationCredential` · `validateCredentialBody` · `canonicaliseCredential` · `signCredential` · `b64uEncodeBytes` | Buyer signs a delegation credential authorising the agent to release escrow; `vc_id` becomes the opaque buyer placeholder | `lib/t3/adk.ts:125`, `:136`, `:138`, `:139`, `:141` |
+| `verifyAgentIdentity` | `createAuthenticatedClient` → `handshake`/`authenticate`/`getDid`/`isAuthenticated` | Confirm the agent DID before any privileged action | `lib/t3/adk.ts:186` |
+| `resolveAndPayoutInTEE` | `b64uDecodeStrict` · `buildInvocationPreimage` · `signAgentInvocation` | Agent signs a replay-bound invocation under the buyer's delegation; gates the TEE resolve + payout | `lib/t3/adk.ts:266`, `:272`, `:273` |
+| `writeAuditRow` | (SHA-256 receipt + DB) | Immutable audit row + cryptographic receipt hash | `lib/t3/adk.ts` |
+
+The `agent_pubkey` a credential authorises is the agent's 33-byte compressed
+secp256k1 key, derived via ethers `SigningKey` (`lib/t3/client.ts:86`).
+
+**Honest accounting:** the credential mint, identity check, and invocation
+signing are **real SDK crypto** (verified offline + against testnet in
+`tools/step3-smoke.ts`). Two pieces are stubbed behind the adapter and marked
+`// TODO: confirm`: submitting the signed invocation to a *deployed*
+`tee:trade-finance` delegation contract (`client.execute`), and the immutable
+T3 ledger write (a tenant `logging::audit` host call read back via
+`client.getAuditEvents`) — neither contract is deployed in this scaffold. The
+actual Stripe Connect transfer is injected by Step 4 via `setPayoutExecutor`.
 
 ## Build progress
 
@@ -76,7 +95,10 @@ lands in `lib/t3/adk.ts` at Step 3.)_
   `lib/store/types.ts`. Seeds 3 LCs (valid, port-mismatch, over-value) —
   `npm run db:push && npm run db:seed`. Buyer/exporter stored as opaque
   placeholders only; no raw bank/Stripe data persisted.
-- [ ] Step 3 — T3 SDK adapter (core).
+- [x] **Step 3** — T3 SDK adapter (core 40%). Four typed fns in `lib/t3/adk.ts`
+  wrapping real SDK delegation/identity/invocation crypto; typed errors
+  (`IdentityError`/`ResolutionError`/`PayoutError`), redaction guard, and a
+  `step` event bus. Verified by `tools/step3-smoke.ts`.
 - [ ] Step 4 — Escrow (Stripe Connect, test mode).
 - [ ] Step 5 — Agent loop + deterministic policy gate.
 - [ ] Step 6 — API + SSE event stream.

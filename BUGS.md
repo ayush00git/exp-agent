@@ -43,3 +43,31 @@ while building gets logged here (severity, repro, expected vs actual).
 - **Actual:** Identity only appears after the separate `authenticate()` call.
   This is correct (handshake = encrypted session; authenticate = identity), but
   the `did?: Did` field on `HandshakeResult` invites the wrong assumption.
+
+## #4 — Delegation `agent_pubkey` format undocumented; no SDK pubkey helper
+
+- **Severity:** Medium (integration friction on the headline Agent-Auth path)
+- **Where:** `buildDelegationCredential({ agent_pubkey })`, `@terminal3/t3n-sdk@3.5.2`
+- **Repro:** Building a delegation credential needs `agent_pubkey: Uint8Array`,
+  but nothing documents the encoding, and the SDK exports `eth_get_address`
+  (20-byte address) — not a public key. There is no `eth_get_pubkey` helper.
+- **Expected:** A documented format + an SDK helper to derive the agent pubkey
+  from the same secret used for `metamask_sign` / `signAgentInvocation`.
+- **Actual:** Determined empirically that `AGENT_PUBKEY_LEN === 33`, i.e. the
+  **compressed secp256k1** public key. Derived it via ethers
+  `new SigningKey(pk).compressedPublicKey` (ethers is already an SDK dep).
+  Works, but newcomers must reverse-engineer the length constant.
+
+## #5 — Doc gap: no worked example for the delegate → invoke crypto flow
+
+- **Severity:** Medium (docs gap on the SDK's headline feature)
+- **Where:** README / `https://docs.terminal3.io`
+- **Repro:** The delegation primitives (`buildDelegationCredential`,
+  `canonicaliseCredential`, `signCredential`, `buildInvocationPreimage`,
+  `signAgentInvocation`) ship with good doc comments but no end-to-end example
+  tying "user signs credential" → "agent signs invocation" → contract submit.
+- **Expected:** One worked snippet (the `tee:payroll` flow exists as
+  `buildPayrollInvocation`, but it's payroll-specific and assumes a deployed
+  contract).
+- **Actual:** Assembled the generic flow from the type defs; captured working
+  offline + testnet runs in `tools/step3-smoke.ts` for reference.
