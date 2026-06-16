@@ -62,6 +62,20 @@ is the only gate that can approve payout.
   audit ledger.
 - Full lifecycle smoke test.
 
+## Where the SDK Fires
+
+Every privileged identity, authorization, and payout-proof step routes through
+`@terminal3/t3n-sdk`. These are the load-bearing SDK call sites:
+
+| Flow | SDK calls | File lines |
+| --- | --- | --- |
+| Agent session bootstrap | `setEnvironment`, `loadWasmComponent` | `lib/t3/client.ts:49`, `lib/t3/client.ts:50` |
+| Agent address and DID auth | `eth_get_address`, `metamask_sign`, `new T3nClient`, `handshake`, `authenticate` | `lib/t3/client.ts:97`, `lib/t3/client.ts:102`, `lib/t3/client.ts:100`, `lib/t3/client.ts:105`, `lib/t3/client.ts:106` |
+| Buyer authorization mint | `buildDelegationCredential`, `validateCredentialBody`, `canonicaliseCredential`, `signCredential`, `b64uEncodeBytes` | `lib/t3/adk.ts:125`, `lib/t3/adk.ts:136`, `lib/t3/adk.ts:138`, `lib/t3/adk.ts:139`, `lib/t3/adk.ts:141` |
+| Agent identity check | `verifyAgentIdentity` calls authenticated T3 client session checks | `lib/t3/adk.ts:175` |
+| TEE payout invocation proof | `b64uDecodeStrict`, `buildInvocationPreimage`, `signAgentInvocation`, `b64uEncodeBytes` | `lib/t3/adk.ts:272`, `lib/t3/adk.ts:278`, `lib/t3/adk.ts:279`, `lib/t3/adk.ts:280` |
+| Audit receipt boundary | `writeAuditRow` persists the redacted proof and receipt hash | `lib/t3/adk.ts:350` |
+
 ## Simulation Mode
 
 The project is designed to demo without paid or external financial accounts.
