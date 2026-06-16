@@ -78,12 +78,14 @@ Smoke tests for each layer:
 (adapter), `.../step4-smoke.ts` (escrow idempotency), and
 `npm run smoke:step5` (full lifecycle).
 
-## App surface
+## App surface & Visual Features
 
-The dashboard at `/` is the judge-facing demo console. It lists seeded Letters
-of Credit, shows the five-state rail, exposes `Authorize escrow` and
-`Simulate delivery` actions, streams live agent events, and shows the audit
-ledger with masked proofs/refs.
+The dashboard at `/` is the judge-facing demo console, designed for optimal visual presentation:
+*   **Dynamic creation**: Click **CREATE CONTRACT** in the header to deploy new custom Letters of Credit on-the-fly.
+*   **TEE Policy Customization**: In the creation modal, check *Customize TEE Policy Rules* to independently configure required ports or value limit caps—allowing you to dynamically simulate both successful settlements and port/value policy violations.
+*   **Stripe Sandbox Helper**: Pre-populated defaults steer deployment toward `exporter-ref:acme-textiles-001` to ensure successful Stripe destination mapping.
+*   **TEE Cryptographic Flowchart**: Inside the inspector panel, an interactive, color-coded SVG flowchart dynamically maps client, enclave, and settlement boundaries for the inspected transaction receipt.
+*   **T3 Proof Exporter**: Downloader button inside the inspector generates and saves a raw, signed cryptographic T3 proof (`t3-proof-*.json`) to the user's browser.
 
 API routes:
 
