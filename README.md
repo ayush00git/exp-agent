@@ -26,7 +26,7 @@ In international trade, **Letters of Credit (LC)** are slow, manual, paper-heavy
 
 *   **Dynamic creation**: Click **CREATE CONTRACT** in the console header to deploy new custom Letters of Credit on-the-fly.
 *   **TEE Policy Customization**: Toggle *Customize TEE Policy Rules* in the creation form to set independent required ports or value limit caps—making it simple to test and demonstrate port/value policy violations.
-*   **Stripe Sandbox Helper**: Pre-populated defaults steer deployment toward `exporter-ref:acme-textiles-001` to ensure successful Stripe destination mapping.
+*   **Zero-Configuration Stripe Connect**: If `STRIPE_SECRET_KEY` is set but `STRIPE_DESTINATIONS` is not, the agent automatically and dynamically provisions test-mode Custom Connect accounts for exporters on-the-fly, caching them locally in `stripe_destinations_cache.json`. This makes testing real Stripe payouts completely zero-configuration.
 *   **TEE Cryptographic Flowchart**: An interactive, color-coded SVG flowchart dynamically maps client, enclave, and settlement zones for the inspected transaction receipt.
 *   **T3 Proof Exporter**: A "Download JSON" proof exporter saves signed cryptographic T3 proofs (`t3-proof-*.json`) directly to the user's browser.
 

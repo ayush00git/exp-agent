@@ -179,3 +179,5 @@ Use this section to record completed work as we go.
 - [x] Chunk 5 complete: dashboard implemented and HTTP/build verified; `agent-browser` was unavailable on PATH, so visual verification used responsive code review plus route checks.
 - [x] Chunk 6 complete: duplicate, policy denial, settlement failure, payout failure, redaction, DID mismatch, and missing-key safety are covered.
 - [x] Chunk 7 complete: README updated, `DEMO.md` added, `project_readme.md` added, final verification recorded.
+- [x] Chunk 8 complete: Stripe Connect zero-configuration dynamic custom account creation fallback added and verified.
+- [x] Chunk 9 complete: Visual inspector side drawer enhanced with dynamic data-rich cards for every enclave and settlement lifecycle event.

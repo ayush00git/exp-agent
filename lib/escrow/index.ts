@@ -124,7 +124,7 @@ export async function releaseToExporter(ctx: PayoutContext): Promise<PayoutOutco
   }
 
   // Resolve placeholder -> Connect destination. acct id stays in this scope.
-  const { accountId, simulated: destSimulated } = resolveDestination(ctx.exporterRef);
+  const { accountId, simulated: destSimulated } = await resolveDestination(ctx.exporterRef);
   const cur = (ctx.currency ?? "aud").toLowerCase();
 
   let ref: string;

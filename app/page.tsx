@@ -83,6 +83,183 @@ function getExplanation(kind: string): string {
   }
 }
 
+function renderVisualDetails(event: StepEvent) {
+  if (!event.ok) return null;
+  const data = event.data as any;
+
+  switch (event.kind) {
+    case "llm.parse": {
+      const explanation = data?.explanation as string;
+      const opinionMet = data?.opinionMet as boolean;
+      if (!explanation) return null;
+      return (
+        <div className="border border-emerald-500/15 bg-emerald-950/20 p-4 rounded-sm space-y-3">
+          <div className="flex items-center justify-between border-b border-emerald-500/10 pb-2">
+            <span className="text-neutral-400 font-mono text-[10px] uppercase">LLM Assessment Opinion</span>
+            <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${opinionMet ? "bg-emerald-900/40 text-emerald-300 border border-emerald-500/30" : "bg-amber-900/40 text-amber-300 border border-amber-500/30"}`}>
+              {opinionMet ? "CONDITIONS MET" : "CONDITIONS NOT MET"}
+            </span>
+          </div>
+          <p className="text-xs text-neutral-300 italic leading-relaxed whitespace-pre-wrap">
+            &ldquo;{explanation}&rdquo;
+          </p>
+        </div>
+      );
+    }
+
+    case "policy.check": {
+      const checks = data?.checks as any[];
+      if (!checks || !Array.isArray(checks)) return null;
+      return (
+        <div className="border border-neutral-900 bg-neutral-950/40 p-4 rounded-sm space-y-3">
+          <p className="text-neutral-400 font-mono text-[10px] uppercase border-b border-neutral-900 pb-2">Deterministic Policy Checklist</p>
+          <div className="space-y-2">
+            {checks.map((check: any) => (
+              <div key={check.name} className="flex items-start justify-between text-xs gap-3">
+                <div className="flex items-center gap-2">
+                  <span>{check.ok ? "✔️" : "❌"}</span>
+                  <span className="font-mono text-[11px] text-neutral-300">{check.name}</span>
+                </div>
+                <span className="text-neutral-400 text-right font-mono text-[10px]">{check.detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    case "identity.verify": {
+      return (
+        <div className="border border-emerald-500/15 bg-emerald-950/20 p-4 rounded-sm space-y-3 font-mono text-xs">
+          <div className="flex items-center justify-between border-b border-emerald-500/10 pb-2">
+            <span className="text-neutral-400 text-[10px] uppercase">T3 Identity Verification Card</span>
+            <span className="text-emerald-400 text-[10px] font-bold">✓ SECURE AGENT</span>
+          </div>
+          <div className="space-y-2 text-[11px]">
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Agent DID</span>
+              <span className="text-emerald-300 truncate max-w-[200px]" title={event.proof}>{event.proof || "did:t3n:..."}</span>
+            </div>
+            {data?.address && (
+              <div className="flex justify-between">
+                <span className="text-neutral-500">ETH Address</span>
+                <span className="text-neutral-300">{data.address as string}</span>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Status</span>
+              <span className="text-emerald-400">Handshake & Authenticate OK</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    case "authorization.mint": {
+      if (!data) return null;
+      return (
+        <div className="border border-neutral-900 bg-neutral-950/40 p-4 rounded-sm space-y-3 font-mono text-xs">
+          <p className="text-neutral-400 text-[10px] uppercase border-b border-neutral-900 pb-2">Minted Delegation Details</p>
+          <div className="space-y-2 text-[11px]">
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Allowed Function</span>
+              <span className="text-emerald-300">{data.function as string || "release-escrow"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-500">TTL</span>
+              <span className="text-neutral-300">{data.ttlSecs as number || 86400} seconds</span>
+            </div>
+            {data.buyerSigColonHex && (
+              <div>
+                <span className="text-neutral-500 block mb-1">Buyer Signature (EIP-191)</span>
+                <div className="bg-black/40 border border-neutral-900 p-2 rounded text-[10px] text-neutral-400 break-all select-all leading-tight">
+                  {data.buyerSigColonHex as string}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    case "escrow.lock": {
+      return (
+        <div className="border border-neutral-900 bg-neutral-950/40 p-4 rounded-sm space-y-3 font-mono text-xs">
+          <p className="text-neutral-400 text-[10px] uppercase border-b border-neutral-900 pb-2">Stripe Payment Intent (Hold)</p>
+          <div className="space-y-2 text-[11px]">
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Intent ID</span>
+              <span className="text-emerald-300">{event.proof || "pi_..."}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Capture Status</span>
+              <span className="text-neutral-300">{data?.status as string || "requires_capture"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Mode</span>
+              <span className="text-neutral-300">{data?.simulated ? "Offline Simulator" : "Live Stripe Testnet"}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    case "payout.fire": {
+      return (
+        <div className="border border-neutral-900 bg-neutral-950/40 p-4 rounded-sm space-y-3 font-mono text-xs">
+          <p className="text-neutral-400 text-[10px] uppercase border-b border-neutral-900 pb-2">Stripe Connect Transfer</p>
+          <div className="space-y-2 text-[11px]">
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Transfer ID</span>
+              <span className="text-emerald-300">{event.proof || "tr_..."}</span>
+            </div>
+            {data?.destination && (
+              <div className="flex justify-between">
+                <span className="text-neutral-500">Connected Destination</span>
+                <span className="text-neutral-300">{data.destination as string}</span>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Payout Status</span>
+              <span className="text-emerald-400 font-bold">Confirmed / Succeeded</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    case "audit.write": {
+      const payload = data?.auditPayload as any;
+      return (
+        <div className="border border-neutral-900 bg-neutral-950/40 p-4 rounded-sm space-y-3 font-mono text-xs">
+          <p className="text-neutral-400 text-[10px] uppercase border-b border-neutral-900 pb-2">Cryptographic Audit Ledger Write</p>
+          <div className="space-y-2 text-[11px]">
+            {payload && (
+              <>
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">State Transition</span>
+                  <span className="text-neutral-300">{payload.fromState} ➔ {payload.toState}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-500">Agent Signer DID</span>
+                  <span className="text-neutral-300 truncate max-w-[200px]" title={payload.agentDid}>{payload.agentDid}</span>
+                </div>
+              </>
+            )}
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Receipt SHA-256</span>
+              <span className="text-emerald-400 truncate max-w-[200px]" title={event.proof}>{event.proof}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    default:
+      return null;
+  }
+}
+
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -716,6 +893,8 @@ export default function Home() {
                       {getExplanation(inspectorEvent.kind)}
                     </p>
                   </div>
+
+                  {renderVisualDetails(inspectorEvent)}
 
                   <div className="border border-neutral-900 bg-neutral-950/20 p-4 rounded-sm font-mono text-[11px] space-y-3.5">
                     <div className="flex justify-between border-b border-neutral-900 pb-2">

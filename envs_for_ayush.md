@@ -5,7 +5,7 @@ Hey Ayush, here are all the environment variables we used to configure the Agent
 **IMPORTANT SECURITY NOTE**: Make sure to remove these or swap them out for production keys when deploying. Do NOT leave these in the final production deployment.
 
 ```env
-T3N_AGENT_PRIVATE_KEY=0x02529d879a81b511618cfaf28bed3db55b8f6abd0b78cd61f548c1ae298ab698
+T3N_AGENT_PRIVATE_KEY=0x54363dc0fc421addbfcbe438649866ed7bf43f8fdc629019a31aeb71aa68004b
 T3N_DEMO_BUYER_PRIVATE_KEY=0x11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff
 DATABASE_URL="file:./dev.db"
 
