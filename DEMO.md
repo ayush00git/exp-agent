@@ -20,8 +20,9 @@ Required local env values:
 - `T3N_AGENT_PRIVATE_KEY=0x...`
 - `T3N_DEMO_BUYER_PRIVATE_KEY=0x...`
 
-Stripe is optional. Without `STRIPE_SECRET_KEY`, the app uses simulator escrow
-refs such as `pi_sim_*` and `tr_sim_*`.
+Stripe is optional:
+- **Simulation Mode**: Without `STRIPE_SECRET_KEY`, the app automatically uses simulator escrow refs (`pi_sim_*` and `tr_sim_*`).
+- **Zero-Configuration Live Test Mode**: If you provide `STRIPE_SECRET_KEY` but do not configure `STRIPE_DESTINATIONS`, the project automatically and dynamically provisions test-mode Custom Connect accounts on your Stripe dashboard on-the-fly and executes transfers to them.
 
 ## Happy Path
 

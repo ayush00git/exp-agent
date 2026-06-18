@@ -153,7 +153,7 @@ async function reseedSmokeData() {
         buyerRef: BUYER_AUTH_PENDING,
         exporterRef: scenario.exporterRef,
         valueCents: scenario.valueCents,
-        currency: "USD",
+        currency: "AUD",
         targetPort: scenario.targetPort,
         state: "INITIATED",
         terms: {
@@ -188,7 +188,7 @@ async function createIdentityFailureLc() {
       buyerRef: BUYER_AUTH_PENDING,
       exporterRef: "exporter-ref:identity-failure-004",
       valueCents: 1_000_000,
-      currency: "USD",
+      currency: "AUD",
       targetPort: "Port of Rotterdam (NLRTM)",
       state: "INITIATED",
       terms: {

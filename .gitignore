@@ -32,3 +32,6 @@ yarn-error.log*
 *.db
 *.db-journal
 /prisma/dev.db*
+
+# Stripe dynamic provisioning cache
+stripe_destinations_cache.json
