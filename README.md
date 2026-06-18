@@ -1,6 +1,7 @@
 # 🚢 Autonomous TEE Trade Finance (Letter of Credit) Agent
 
 [![Terminal 3 ADK Bounty](https://img.shields.io/badge/Terminal_3-Agent_Auth_SDK-10b981?style=for-the-badge&logo=web3)](https://terminal3.io)
+[![Verification CI](https://github.com/divyansh-v15-06/exp-agent/actions/workflows/verify.yml/badge.svg)](https://github.com/divyansh-v15-06/exp-agent/actions/workflows/verify.yml)
 [![Next.js 14](https://img.shields.io/badge/Next.js_14-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
 [![Stripe Connect](https://img.shields.io/badge/Stripe-Connect_API-635bff?style=for-the-badge&logo=stripe)](https://stripe.com)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-flash_2.5-4285f4?style=for-the-badge&logo=google-gemini)](https://deepmind.google/technologies/gemini)
