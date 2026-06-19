@@ -7,6 +7,7 @@
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-flash_2.5-4285f4?style=for-the-badge&logo=google-gemini)](https://deepmind.google/technologies/gemini)
 [![Prisma ORM](https://img.shields.io/badge/Prisma-ORM-2d3748?style=for-the-badge&logo=prisma)](https://prisma.io)
 [![Neon Database](https://img.shields.io/badge/Neon_Database-00e2c6?style=for-the-badge&logo=neon)](https://neon.tech)
+[![Live Site](https://img.shields.io/badge/Live_Demo-exp--agent--theta.vercel.app-blueviolet?style=for-the-badge&logo=vercel)](https://exp-agent-theta.vercel.app/)
 
 An autonomous escrow agent for international trade finance executing **Letter of Credit (LC)** agreements. The agent locks a buyer's funds, verifies unstructured logistics webhooks, and securely releases payment to the exporter.
 
