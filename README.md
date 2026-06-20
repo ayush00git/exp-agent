@@ -23,6 +23,33 @@ The application is deployed live and fully functional at:
 
 You can interact with the live dashboard and trigger test scenarios directly on the web app.
 
+### ➕ How to Create Custom Contracts (Scenarios)
+Click the **CREATE CONTRACT** button in the top right of the console to deploy your own custom Letter of Credit (LC) and test different policy gates.
+
+Here is how to set up the form for each situation:
+
+#### 1. Successful Settlement (Happy Path)
+* **Value (AUD)**: `25000` (or any amount)
+* **Target Delivery Port**: `Rotterdam`
+* **Policy Customization**: Leave *Customize TEE Policy Rules* **unchecked**.
+* **Simulation**: Click **Authorize Escrow**, then click **Simulate Delivery**. The webhook port matches the target port (`Rotterdam`), and the payment resolves successfully (**SETTLED**).
+
+#### 2. Port Mismatch Denial
+* **Value (AUD)**: `25000`
+* **Target Delivery Port**: `Rotterdam` *(where cargo is simulated to arrive)*
+* **Policy Customization**: Check *Customize TEE Policy Rules* and set **Required Port** to `Hamburg` (or any port other than `Rotterdam`).
+* **Simulation**: Click **Simulate Delivery**. The webhook reports arrival at `Rotterdam` but the policy requires `Hamburg`, triggering a policy rejection (**DENIED**).
+
+#### 3. Over Value Cap Denial
+* **Value (AUD)**: `60000`
+* **Target Delivery Port**: `Rotterdam`
+* **Policy Customization**: Check *Customize TEE Policy Rules* and set **Max Value Cap** to `50000` (lower than the contract Value).
+* **Simulation**: Click **Simulate Delivery**. The policy engine flags that the contract value exceeds the maximum allowable cap, blocking the payout (**FAILED**).
+
+#### 4. Automatic Exporter Payout Setup (Stripe Connect)
+* **Exporter Reference**: Set to a new reference (e.g., `exporter-ref:my-custom-cargo-999`).
+* **Simulation**: The enclave automatically provisions a new Stripe Connect custom account on-the-fly to receive the payout, demonstrating dynamic merchant routing. Use `exporter-ref:acme-textiles-001` to test using the pre-seeded account.
+
 ---
 
 ## 🛠️ Tech Stack & Components
