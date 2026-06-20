@@ -8,6 +8,8 @@
 [![Prisma ORM](https://img.shields.io/badge/Prisma-ORM-2d3748?style=for-the-badge&logo=prisma)](https://prisma.io)
 [![Neon Database](https://img.shields.io/badge/Neon_Database-00e2c6?style=for-the-badge&logo=neon)](https://neon.tech)
 [![Live Site](https://img.shields.io/badge/Live_Demo-exp--agent--git--main--divyansh--v15--06.vercel.app-blueviolet?style=for-the-badge&logo=vercel)](https://exp-agent-git-main-divyansh-v15-06.vercel.app/)
+[![Video Demo](https://img.shields.io/badge/Video_Demo-YouTube-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=B4gyRS8q4wY&t=389s)
+
 
 An autonomous escrow agent for international trade finance executing **Letter of Credit (LC)** agreements. The agent locks a buyer's funds, verifies unstructured logistics webhooks, and securely releases payment to the exporter.
 
@@ -179,3 +181,8 @@ Make sure your `.env.local` file contains the correct `DATABASE_URL` pointing to
 docker run -d -p 3000:3000 --env-file .env.local trade-finance-agent
 ```
 
+---
+
+## 📹 Video Presentation
+Watch the system walkthrough, live Stripe dashboard verification checklist, and the step-by-step judge demo:
+*   [YouTube Video Presentation](https://www.youtube.com/watch?v=B4gyRS8q4wY&t=389s)
