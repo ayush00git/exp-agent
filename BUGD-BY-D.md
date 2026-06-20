@@ -310,7 +310,7 @@ Correctly seeded secrets appear absent at runtime.
 
 ---
 
-## Bug #09: Node.js requirement differs between docs and package
+## Bug #09: Node.js requirement differs between docs and package (unconfirmed)
 
 **Severity:** Medium  
 **Category:** Documentation gap
@@ -365,7 +365,7 @@ Registration prerequisites are ambiguous.
 
 ---
 
-## Bug #11: Write-contract guide references a sample repo without a URL
+## Bug #11: Write-contract guide references a sample repo without a URL (unconfirmed)
 
 **Severity:** Medium  
 **Category:** Onboarding / documentation gap
@@ -544,7 +544,7 @@ Causes search and navigation confusion.
 
 ---
 
-## Bug #17: Telegram support channel is plain text, not a link
+## Bug #17: Telegram support channel is plain text, not a link (unconfirmed)
 
 **Severity:** Low  
 **Category:** Documentation gap
