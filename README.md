@@ -17,6 +17,14 @@ By executing the trade rules and payment resolution inside a secure **Trusted Ex
 
 ---
 
+## 🌐 Live Demo
+The application is deployed live and fully functional at:
+👉 **[Autonomous TEE Trade Finance Agent - Live Demo](https://exp-agent-git-main-divyansh-v15-06.vercel.app/)**
+
+You can interact with the live dashboard and trigger test scenarios directly on the web app.
+
+---
+
 ## 🛠️ Tech Stack & Components
 
 *   **Secure Enclave Sandbox**: [Terminal 3 Agent Auth SDK](https://terminal3.io) (WASM cryptographic metamorphic signatures, on-chain DID identity challenges).
